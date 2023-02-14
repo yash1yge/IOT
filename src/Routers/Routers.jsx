@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import Signin from '../Attendance/auth/signin'
 import Sidebar from '../Attendance/layouts/Sidebar';
 import SidebarPanel from '../Attendance/layouts/SidebarPanel';
@@ -22,42 +22,45 @@ export default function Routers() {
   const [header, setHeader] = useState(true)
   const route = window.location.pathname
   darkMode ? document.getElementById("apply-darkmode").classList.add('dark') : document.getElementById("apply-darkmode").classList.remove('dark')
+  const location = useLocation()
+  useEffect(() => {
+    // console.log(location)
+  }, [location])
+
+
+
 
   return (
     <>
       <div className={`${mono ? "monochromeEffect relative transition-all" : "relative transition-all"} w-full h-full ${darkMode && "bg-[#192132] text-[#a3adc2]"}`}>
-        <BrowserRouter>
+        {route !== "/signin" && route !== "/" &&
+          <Sidebar header={header} />
+        }
+        {route !== "/signin" && route !== "/" &&
+          <SidebarPanel header={header} setHeader={setHeader} />
+        }
+        <div className={`${header ? "w-full md:w-[calc(100%-80px)] transition-all" : "w-full md:w-[calc(100%-80px)] xl:w-[calc(100%-320px)]"} ml-auto transition-all ${route === "/signin" && "w-100 h-screen m-0"}`}>
           {route !== "/signin" && route !== "/" &&
-            <Sidebar header={header} />
+            <Header header={header} setHeader={setHeader} setMono={setMono} mono={mono} darkMode={darkMode} setDarkMode={setDarkMode} />
           }
-          {route !== "/signin" && route !== "/" &&
-            <SidebarPanel header={header} setHeader={setHeader} />
-          }
-          <div className={`${header ? "w-full md:w-[calc(100%-80px)] transition-all" : "w-full md:w-[calc(100%-80px)] xl:w-[calc(100%-320px)]"} ml-auto transition-all ${route === "/signin" && "w-100 h-screen m-0"}`}>
-            {route !== "/signin" && route !== "/" &&
-              <Header header={header} setHeader={setHeader} setMono={setMono} mono={mono} darkMode={darkMode} setDarkMode={setDarkMode} />
-            }
-            <div className={`${header ? "px-[16px] md:px-[24px] xl:px-[64px]" : "px-[24px]"} py-[24px] ${route === "/signin" && route !== "/" && "remove-padding"} ${route === "/dashboard" && "pad-rmv-db"}`}>
-              <Routes>
-                {/* <Route path="/" element={<Signin/>}/> */}
-                {/* <Route path="/signin" element={<signin/>}/> */}
-                {/* <Route path="/attendance/fornego/login" element={<Login/>}/> */}
-                <Route path="/signin" element={<Signin />} />
-                <Route path="/dashboard" element={<Dashboard mono={mono} setMono={setMono} header={header} setHeader={setHeader} darkMode={darkMode} setDarkMode={setDarkMode} />} />
-                <Route path="/profile" element={<Profile mono={mono} setMono={setMono} darkMode={darkMode} header={header} setHeader={setHeader} setDarkMode={setDarkMode} />} />
-                <Route path='/studentattendance' element={<StudentAttendance />} />
-                <Route path="/liveattendence" element={<Liveattendence mono={mono} setMono={setMono} darkMode={darkMode} header={header} setHeader={setHeader} setDarkMode={setDarkMode} />} />
-                <Route path='/studentsummary' element={<StudentSummary />} />
-                <Route path='/communication' element={<Communication />} />
-                <Route path='/log-reports' element={<UserLogReport />} />
-                <Route path='/manageuser' element={<ManageUser />} />
-                <Route path='/devicemanager' element={<DeviceManager />} />
-                <Route path='/schoolsetting' element={<SchoolSetting />} />
-                <Route path='/classbatch' element={<ClassBatch />} />
-              </Routes>
-            </div>
+          <div className={`${header ? "px-[16px] md:px-[24px] xl:px-[64px]" : "px-[24px]"} py-[24px] ${route === "/signin" && route !== "/" && "remove-padding"} ${route === "/dashboard" && "pad-rmv-db"}`}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/signin" />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/dashboard" element={<Dashboard mono={mono} setMono={setMono} header={header} setHeader={setHeader} darkMode={darkMode} setDarkMode={setDarkMode} />} />
+              <Route path="/profile" element={<Profile mono={mono} setMono={setMono} darkMode={darkMode} header={header} setHeader={setHeader} setDarkMode={setDarkMode} />} />
+              <Route path='/studentattendance' element={<StudentAttendance />} />
+              <Route path="/liveattendence" element={<Liveattendence mono={mono} setMono={setMono} darkMode={darkMode} header={header} setHeader={setHeader} setDarkMode={setDarkMode} />} />
+              <Route path='/studentsummary' element={<StudentSummary />} />
+              <Route path='/communication' element={<Communication />} />
+              <Route path='/log-reports' element={<UserLogReport />} />
+              <Route path='/manageuser' element={<ManageUser />} />
+              <Route path='/devicemanager' element={<DeviceManager />} />
+              <Route path='/schoolsetting' element={<SchoolSetting />} />
+              <Route path='/classbatch' element={<ClassBatch />} />
+            </Routes>
           </div>
-        </BrowserRouter>
+        </div>
       </div>
     </>
   )
